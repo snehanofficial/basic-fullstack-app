@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import '../assets/styles/UserManagement.css'
+import { FaTrashCan, FaPencil } from "react-icons/fa6";
 
 const API = "http://localhost:3000";
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
+  const [visibleContainer, setVisibleContainer] = useState('addUser');
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -62,6 +65,8 @@ function UserManagement() {
       console.error("UpdateUser error:", err);
       alert("Failed to update user");
     }
+
+    setVisibleContainer('addUser');
   }
 
   // Delete user
@@ -83,8 +88,11 @@ function UserManagement() {
 
   return (
     <div className="app">
-      <h2>Frontend Integration</h2>
+      <h2>User Management System</h2>
 
+      
+      {visibleContainer === 'addUser' && (
+      <div className="form-container">
       <form className="form" onSubmit={AddUser}>
         <h3>Add User</h3>
         <input
@@ -92,23 +100,26 @@ function UserManagement() {
           value={form.name}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           required
-        />
+        /> <br />
         <input
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
           required
-        />
+        /> <br />
         <input
           placeholder="Password"
           type="password"
           value={form.password}
           onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
           required
-        />
-        <button type="submit">Add</button>
+        /> <br />
+        <button className="add-btn" type="submit">Add</button>
       </form>
-
+      </div>
+      )}
+      
+      {visibleContainer === 'updateUser' && ( <div className="form-container update-form">
       <form className="form" onSubmit={UpdateUser}>
         <h3>Update User</h3>
         <input
@@ -116,27 +127,29 @@ function UserManagement() {
           value={form.id}
           onChange={(e) => setForm((f) => ({ ...f, id: e.target.value }))}
           required
-        />
+        /> <br />
         <input
           placeholder="New name"
           value={form.name}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-        />
+        /> <br />
         <input
           placeholder="New email"
           value={form.email}
           onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        />
+        /> <br />
         <input
           placeholder="New password"
           type="password"
           value={form.password}
           onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-        />
-        <button type="submit">Update</button>
+        /> <br />
+        <button className="update-btn" type="submit">Update</button>
       </form>
+      </div>
+      )}
 
-      <section className="list">
+      <section className="users-list">
         <h3>All Users</h3>
         {users.length === 0 ? (
           <p>No users</p>
@@ -158,18 +171,20 @@ function UserManagement() {
                   <td>{u.email}</td>
                   <td>
                     <button
-                      onClick={() =>
+                      onClick={() => {
                         setForm({
                           id: String(u.id),
                           name: u.name,
                           email: u.email,
-                          password: "",
-                        })
+                          password: u.password,
+                        });
+                        setVisibleContainer('updateUser');
+                      }
                       }
                     >
-                      Edit
+                      <FaPencil />
                     </button>
-                    <button onClick={() => DeleteUser(u.id)}>Delete</button>
+                    <button onClick={() => DeleteUser(u.id)}><FaTrashCan /></button>
                   </td>
                 </tr>
               ))}
