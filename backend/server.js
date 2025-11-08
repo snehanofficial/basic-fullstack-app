@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
@@ -13,10 +15,10 @@ app.use(cors()); // This allows requests from all origin
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    database: 'basic_crud_db',
-    user: 'root',
-    password: 'password'
+    host: (process.env.DB_HOST || 'localhost'),
+    database: (process.env.DB_NAME || 'basic_crud_db'),
+    user: (process.env.DB_USER || 'root'),
+    password: (process.env.DB_PASSWORD || 'password')
 });
 
 db.connect((err) => {
@@ -129,7 +131,7 @@ app.delete('/delete-user/:id', (req, res) => {
   })
 });
 
-const PORT = 3000;
+const PORT = ( process.env.DB_PORT || 3000);
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

@@ -3,7 +3,7 @@ import axios from "axios";
 import '../assets/styles/UserManagement.css'
 import { FaTrashCan, FaPencil } from "react-icons/fa6";
 
-const API = "http://localhost:3000";
+const API = ( import.meta.env.REACT_APP_API_URL || "http://localhost:3000");
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
